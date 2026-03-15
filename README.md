@@ -1,8 +1,8 @@
 # Yield
 
-Yield is a programming language I built because I wanted something that actually made sense to me. I came from scripting in Roblox with Luau and every other language felt like too much to learn at once. So I made my own.
+Yield is a programming language I built because I wanted something that actually made sense to me. So I made my own.
 
-It runs fast, needs nothing installed, and reads like plain English. If you know Luau you will feel right at home. If you have never coded before, this is probably the best place to start.
+It runs fast, needs nothing installed, and reads like plain English. If you know Lua/Luau you will feel right at home. If you have never coded before, this is probably the best place to start.
 
 ---
 
@@ -228,8 +228,6 @@ gcc -Wall -O2 -o yield.exe main.c lexer.c parser.c interpreter.c -lm
 ## Why Yield
 
 Most beginner languages are either too simple to build anything real, or too complex to actually learn. Yield tries to sit in the middle. The syntax is clean enough that a complete beginner can read it, but it has classes, error handling, and real data structures so you can build actual programs.
-
-It was also the first programming language designed with AI as a collaborator, which I think is kind of cool.
 
 ---
 
