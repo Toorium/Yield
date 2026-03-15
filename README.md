@@ -228,6 +228,7 @@ gcc -Wall -O2 -o yield.exe main.c lexer.c parser.c interpreter.c -lm
 ## Why Yield
 
 Most beginner languages are either too simple to build anything real, or too complex to actually learn. Yield tries to sit in the middle. The syntax is clean enough that a complete beginner can read it, but it has classes, error handling, and real data structures so you can build actual programs.
+Yield is quite powerful and easy to modify, making it easy for even the beginners!
 
 ---
 
