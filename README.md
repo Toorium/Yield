@@ -8,6 +8,8 @@ It runs fast, needs nothing installed, and reads like plain English. If you know
 
 ## What it looks like
 
+This is a complete Yield program. It creates a variable, runs a loop 5 times rolling a random number each time, adds it to the score, then checks how well you did at the end.
+
 ```
 var name = "World"
 var score = 0
@@ -27,8 +29,6 @@ else:
 end
 ```
 
-That is it. No semicolons, no weird symbols, no confusing setup. Just write code and run it.
-
 ---
 
 ## Install
@@ -41,6 +41,8 @@ That is it. No semicolons, no weird symbols, no confusing setup. Just write code
 
 ## Running a file
 
+Once Yield is installed, you run any `.yd` file like this. Just point it at your file and it runs.
+
 ```
 yield myfile.yd
 ```
@@ -50,6 +52,9 @@ yield myfile.yd
 ## The basics
 
 **Variables**
+
+Variables are how you store information. Use `var` to create one, `set` to change it, and `add`/`sub`/`mul`/`div` to do math on it without needing to rewrite the whole line.
+
 ```
 var x = 10
 const MAX = 100
@@ -59,6 +64,9 @@ sub x 3
 ```
 
 **Output and input**
+
+`out` prints anything to the screen. You can pass it multiple things separated by commas and it prints them all on one line. `input` asks the user to type something and stores their answer in a variable.
+
 ```
 out("Hello!")
 out("Score:", score)
@@ -66,6 +74,9 @@ input(name, "What is your name? ")
 ```
 
 **If statements**
+
+If statements let your program make decisions. It checks a condition and runs the matching block. `elseif` lets you check more conditions, and `else` is the fallback if nothing matched. Every if statement closes with `end`.
+
 ```
 if score = 100:
     out("Perfect!")
@@ -77,23 +88,31 @@ end
 ```
 
 **Loops**
+
+`run` is the only loop keyword in Yield and it does everything. You can loop a set number of times, loop with an index, loop over a list, loop while a condition is true, or loop forever until you say stop.
+
 ```
+// loop exactly 5 times
 run(5):
     out("hello")
 end
 
+// loop with an index that goes from 0 to 9
 run(i, 10):
     out("step", i)
 end
 
+// loop over every item in a list
 run(i, mylist):
     out(i)
 end
 
+// keep looping as long as score is under 100
 run(score < 100):
     add score 1
 end
 
+// loop forever until something says stop
 run:
     out("forever")
     stop
@@ -101,6 +120,9 @@ end
 ```
 
 **Functions**
+
+Functions let you wrap up a piece of code and reuse it. You give it a name, some inputs, and use `yield` to send back a result. Then you can call it from anywhere in your program.
+
 ```
 func add(a, b):
     yield a + b
@@ -111,6 +133,9 @@ out(result)
 ```
 
 **Classes**
+
+Classes are blueprints for creating objects. You define what data an object holds and what it can do, then create as many copies as you need. `func fire` is the special function that runs when you create a new one with `new`.
+
 ```
 class Player:
     func fire(self, name):
@@ -128,6 +153,9 @@ p.show()
 ```
 
 **Lists**
+
+Lists let you store multiple values in one variable. You can add and remove items, check if something is in the list, get the first or last item, and find out how many items there are.
+
 ```
 var items = ["apple", "banana", "cherry"]
 items.add("mango")
@@ -138,6 +166,9 @@ out(items.last())
 ```
 
 **Error handling**
+
+Sometimes code can go wrong. A user types letters when you expect a number, or you try to divide by zero. Wrapping code in `error:` means if anything breaks inside it, the `catch` block runs instead of crashing the whole program.
+
 ```
 error:
     var n = int("not a number")
@@ -151,38 +182,41 @@ end
 
 ## Built in functions
 
+These come with Yield. You do not need to import anything, they just work.
+
 | Function | What it does |
 |---|---|
-| `out(...)` | print to screen |
-| `input(x, "prompt")` | get user input |
-| `chance(1, 10)` | random number |
-| `wait(1)` | pause for 1 second |
-| `upper("hello")` | HELLO |
-| `lower("HELLO")` | hello |
-| `length("hello")` | 5 |
-| `reverse("hello")` | olleh |
-| `int("10")` | convert to integer |
-| `float("3.14")` | convert to decimal |
-| `str(42)` | convert to string |
-| `clear()` | clear the screen |
-| `key.pressed()` | is a key being pressed |
-| `key.get()` | which key was pressed |
+| `out(...)` | prints anything to the screen |
+| `input(x, "prompt")` | asks the user to type something and stores it |
+| `chance(1, 10)` | gives you a random number between 1 and 10 |
+| `wait(1)` | pauses the program for 1 second |
+| `upper("hello")` | converts text to uppercase |
+| `lower("HELLO")` | converts text to lowercase |
+| `length("hello")` | tells you how many characters are in a string |
+| `reverse("hello")` | flips a string or list backwards |
+| `int("10")` | converts a string to a whole number |
+| `float("3.14")` | converts a string to a decimal number |
+| `str(42)` | converts a number to a string |
+| `clear()` | clears everything off the screen |
+| `key.pressed()` | returns true if a key is currently being pressed |
+| `key.get()` | returns which key was pressed as a string like "UP" or "q" |
 
 ---
 
 ## Examples
 
-Check the `examples/` folder for:
-- `hello.yd` — hello world and input
-- `snake.yd` — fully playable snake game
-- `fizzbuzz.yd` — classic fizzbuzz
-- `classes.yd` — classes and objects demo
+The `examples/` folder has some complete programs you can run and look through to see how everything fits together.
+
+- `hello.yd` — a simple hello world that also asks for your name
+- `snake.yd` — a fully playable snake game in the terminal
+- `fizzbuzz.yd` — the classic programming exercise
+- `classes.yd` — shows how classes and objects work with a few different examples
 
 ---
 
 ## Building from source
 
-You need GCC installed. Then:
+If you want to build Yield yourself instead of using the installer, you need GCC. Then run this from the compiler folder.
 
 ```
 cd compiler
