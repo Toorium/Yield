@@ -1,0 +1,205 @@
+// ============================================================
+//  Yield v1.2.0 — Todo List App
+//  Demonstrates: lists, classes, file I/O, load
+// ============================================================
+
+load "io"
+
+const SAVE_FILE = "todos.txt"
+
+class TodoList:
+    func fire(self):
+        set self.items []
+        set self.next_id 1
+    end
+
+    func add_item(self, text):
+        var item = str(self.next_id) + "|" + text + "|pending"
+        self.items.add(item)
+        add self.next_id 1
+        out("Added:", text)
+    end
+
+    func list_items(self):
+        if self.items.size() = 0:
+            out("No todos! Add one.")
+            yield 0
+        end
+        out("")
+        out("=== Your Todos ===")
+        var i = 0
+        run(item, self.items):
+            var parts = item.split("|")
+            var status = "[ ]"
+            if parts[2] = "done":
+                set status "[x]"
+            end
+            out(parts[0] + ".", status, parts[1])
+            add i 1
+        end
+        out("")
+        yield self.items.size()
+    end
+
+    func complete(self, id):
+        var target = str(id)
+        var found = False
+        var i = 0
+        run(i, self.items.size()):
+            var parts = self.items[i].split("|")
+            if parts[0] = target:
+                set self.items[i] parts[0] + "|" + parts[1] + "|done"
+                out("Completed:", parts[1])
+                set found True
+                stop
+            end
+            add i 1
+        end
+        if not found:
+            out("No todo with id", id)
+        end
+    end
+
+    func delete(self, id):
+        var target = str(id)
+        var found = False
+        var i = 0
+        run(i, self.items.size()):
+            var parts = self.items[i].split("|")
+            if parts[0] = target:
+                self.items.remove(self.items[i])
+                out("Deleted todo", id)
+                set found True
+                stop
+            end
+            add i 1
+        end
+        if not found:
+            out("No todo with id", id)
+        end
+    end
+
+    func save(self):
+        var content = ""
+        run(item, self.items):
+            add content item
+            add content "\n"
+        end
+        var ok = write_file(SAVE_FILE, content)
+        if ok:
+            out("Saved", self.items.size(), "todos to", SAVE_FILE)
+        else:
+            out("Could not save file.")
+        end
+    end
+
+    func load_from_file(self):
+        if not file_exists(SAVE_FILE):
+            out("No save file found, starting fresh.")
+            yield 0
+        end
+        var lines = read_lines(SAVE_FILE)
+        set self.items []
+        set self.next_id 1
+        run(line, lines):
+            if length(line) > 0:
+                self.items.add(line)
+                var parts = line.split("|")
+                var id_num = int(parts[0])
+                if id_num >= self.next_id:
+                    set self.next_id id_num + 1
+                end
+            end
+        end
+        out("Loaded", self.items.size(), "todos.")
+        yield self.items.size()
+    end
+end
+
+// ============================================================
+//  Main loop
+// ============================================================
+var todos = new TodoList()
+todos.load_from_file()
+
+out("")
+out("=== Yield Todo List ===")
+out("Commands: add, done, delete, list, save, quit")
+
+run:
+    out("")
+    input(cmd, "> ")
+    set cmd lower(cmd)
+
+    if cmd = "quit" or cmd = "exit" or cmd = "q":
+        todos.save()
+        out("Goodbye!")
+        stop
+    end
+
+    if cmd = "list" or cmd = "ls":
+        todos.list_items()
+        skip
+    end
+
+    if cmd = "save":
+        todos.save()
+        skip
+    end
+
+    // "add Buy milk"
+    if length(cmd) > 4 and cmd.substr(0, 3) = "add":
+        var text = cmd.substr(4)
+        if length(text) = 0:
+            out("Usage: add <task description>")
+        else:
+            todos.add_item(text)
+        end
+        skip
+    end
+
+    // "done 2"
+    if length(cmd) > 4 and cmd.substr(0, 4) = "done":
+        error:
+            var id = int(cmd.substr(5))
+            todos.complete(id)
+        end
+        catch e:
+            out("Usage: done <id number>")
+        end
+        skip
+    end
+
+    // "delete 2" or "del 2"
+    if length(cmd) > 6:
+        var prefix6 = cmd.substr(0, 6)
+        if prefix6 = "delete":
+            error:
+                var rest = cmd.substr(7)
+                var id = int(rest)
+                todos.delete(id)
+            end
+            catch e:
+                out("Usage: delete <id number>")
+            end
+            skip
+        end
+    end
+    if length(cmd) > 3:
+        var prefix3 = cmd.substr(0, 3)
+        if prefix3 = "del":
+            error:
+                var rest = cmd.substr(4)
+                var id = int(rest)
+                todos.delete(id)
+            end
+            catch e:
+                out("Usage: del <id number>")
+            end
+            skip
+        end
+    end
+
+    out("Unknown command:", cmd)
+    out("Commands: add <task>, done <id>, delete <id>, list, save, quit")
+end

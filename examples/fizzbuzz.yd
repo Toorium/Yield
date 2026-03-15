@@ -1,0 +1,22 @@
+// ============================================================
+//  Yield v1.2.0 — FizzBuzz
+// ============================================================
+
+out("FizzBuzz from 1 to 100:")
+out("")
+
+var i = 1
+run(i <= 100):
+    var by3 = (i % 3) = 0
+    var by5 = (i % 5) = 0
+    if by3 and by5:
+        out("FizzBuzz")
+    elseif by3:
+        out("Fizz")
+    elseif by5:
+        out("Buzz")
+    else:
+        out(i)
+    end
+    add i 1
+end

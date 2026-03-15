@@ -1,0 +1,124 @@
+// ============================================================
+//  Yield v1.2.0 — Classes example
+//  Demonstrates: classes, objects, methods, inheritance-style
+// ============================================================
+
+// ---- Animal class ------------------------------------------
+class Animal:
+    func fire(self, name, sound):
+        set self.name name
+        set self.sound sound
+    end
+
+    func speak(self):
+        out(self.name, "says:", self.sound)
+    end
+
+    func describe(self):
+        out("I am", self.name)
+    end
+end
+
+// ---- Dog extends Animal (manual delegation) ----------------
+class Dog:
+    func fire(self, name):
+        set self.name name
+        set self.sound "Woof!"
+        set self.tricks []
+    end
+
+    func speak(self):
+        out(self.name, "barks:", self.sound)
+    end
+
+    func learn(self, trick):
+        self.tricks.add(trick)
+        out(self.name, "learned:", trick)
+    end
+
+    func show_tricks(self):
+        if self.tricks.size() = 0:
+            out(self.name, "knows no tricks yet.")
+        else:
+            out(self.name, "can do:")
+            run(trick, self.tricks):
+                out("  -", trick)
+            end
+        end
+    end
+
+    func describe(self):
+        out("I am a dog named", self.name)
+    end
+end
+
+// ---- BankAccount class -------------------------------------
+class BankAccount:
+    func fire(self, owner, balance):
+        set self.owner owner
+        set self.balance balance
+        set self.history []
+    end
+
+    func deposit(self, amount):
+        if amount <= 0:
+            error("Deposit must be positive")
+        end
+        add self.balance amount
+        self.history.add("Deposit: +" + str(amount))
+        out("Deposited", amount, "— new balance:", self.balance)
+    end
+
+    func withdraw(self, amount):
+        if amount <= 0:
+            error("Withdrawal must be positive")
+        end
+        if amount > self.balance:
+            error("Insufficient funds")
+        end
+        sub self.balance amount
+        self.history.add("Withdrawal: -" + str(amount))
+        out("Withdrew", amount, "— new balance:", self.balance)
+    end
+
+    func print_statement(self):
+        out("=== Statement for", self.owner, "===")
+        run(entry, self.history):
+            out(" ", entry)
+        end
+        out("Balance:", self.balance)
+    end
+end
+
+// ============================================================
+//  Demo
+// ============================================================
+out("--- Animals ---")
+var cat = new Animal("Whiskers", "Meow!")
+var bird = new Animal("Tweety", "Tweet!")
+cat.speak()
+bird.speak()
+
+out("")
+out("--- Dog ---")
+var dog = new Dog("Rex")
+dog.speak()
+dog.learn("sit")
+dog.learn("shake")
+dog.learn("roll over")
+dog.show_tricks()
+
+out("")
+out("--- Bank Account ---")
+var acc = new BankAccount("Alice", 1000)
+error:
+    acc.deposit(500)
+    acc.withdraw(200)
+    acc.withdraw(300)
+    acc.deposit(50)
+    acc.withdraw(2000)
+end
+catch e:
+    out("Transaction failed:", e)
+end
+acc.print_statement()

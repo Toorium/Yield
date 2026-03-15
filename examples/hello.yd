@@ -1,0 +1,25 @@
+// ============================================================
+//  Yield v1.2.0 — Hello World example
+// ============================================================
+
+out("Hello, World!")
+
+input(name, "What is your name? ")
+out("Nice to meet you,", name)
+
+var age = 0
+input(age_str, "How old are you? ")
+error:
+    set age int(age_str)
+end
+catch e:
+    out("That doesn't look like a number, defaulting to 0.")
+end
+
+if age >= 18:
+    out("You are an adult.")
+elseif age > 0:
+    out("You are", age, "years old — still young!")
+else:
+    out("That's a strange age!")
+end

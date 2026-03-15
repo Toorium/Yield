@@ -1,0 +1,66 @@
+// ============================================================
+//  Yield v1.2.0 — Guessing Game
+// ============================================================
+
+const MAX_TRIES = 7
+var secret = chance(1, 100)
+var tries = 0
+var won = False
+
+out("=== Number Guessing Game ===")
+out("I'm thinking of a number between 1 and 100.")
+out("You have", MAX_TRIES, "tries. Good luck!")
+out("")
+
+run:
+    add tries 1
+
+    if tries > MAX_TRIES:
+        out("Out of tries! The number was:", secret)
+        stop
+    end
+
+    out("Attempt", tries, "of", MAX_TRIES)
+
+    input(guess_str, "Your guess: ")
+
+    error:
+        var g = int(guess_str)
+        if g = secret:
+            out("*** Correct! You got it in", tries, "tries! ***")
+            set won True
+            stop
+        elseif g < secret:
+            var diff = secret - g
+            if diff > 20:
+                out("Way too low!")
+            else:
+                out("Too low!")
+            end
+        else:
+            var diff = g - secret
+            if diff > 20:
+                out("Way too high!")
+            else:
+                out("Too high!")
+            end
+        end
+    end
+    catch e:
+        out("Please enter a whole number.")
+        sub tries 1
+    end
+end
+
+out("")
+if won = True:
+    if tries = 1:
+        out("Incredible — first try!")
+    elseif tries <= 3:
+        out("Excellent game!")
+    else:
+        out("Well done!")
+    end
+else:
+    out("Better luck next time!")
+end

@@ -1,0 +1,58 @@
+// ============================================================
+//  Yield v1.2.0 — Simple Calculator
+// ============================================================
+
+func do_calc(a, op, b):
+    if op = "+":
+        yield a + b
+    end
+    if op = "-":
+        yield a - b
+    end
+    if op = "*":
+        yield a * b
+    end
+    if op = "/":
+        if b = 0:
+            error("Cannot divide by zero")
+        end
+        yield a / b
+    end
+    if op = "%":
+        if b = 0:
+            error("Cannot modulo by zero")
+        end
+        yield a % b
+    end
+    error("Unknown operator: " + op)
+end
+
+out("=== Yield Calculator ===")
+out("Operators: + - * / %")
+out("Type 'exit' to quit.")
+out("")
+
+run:
+    input(expr, "Enter calculation (e.g. 10 + 5): ")
+
+    if expr = "exit":
+        out("Bye!")
+        stop
+    end
+
+    error:
+        var parts = expr.split(" ")
+        if parts.size() not = 3:
+            error("Please use format: number operator number")
+        end
+        var a = float(parts[0])
+        var op = parts[1]
+        var b = float(parts[2])
+        var result = do_calc(a, op, b)
+        out("=", result)
+    end
+    catch e:
+        out("Error:", e)
+    end
+    out("")
+end
