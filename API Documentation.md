@@ -185,7 +185,7 @@ var total = add(10, 20)
 
 ```
 class Player:
-    func fire(self, name, health):
+    func init(self, name, health):
         set self.name name
         set self.health health
         set self.inventory []
@@ -206,7 +206,7 @@ player.take_damage(20)
 out(player.is_alive())
 ```
 
-`func fire()` is the constructor — runs automatically on `new`.
+`func init()` is the constructor — runs automatically on `new`.
 Every class function must have `self` as first argument.
 Use `self.x` to store and read values on the object.
 
