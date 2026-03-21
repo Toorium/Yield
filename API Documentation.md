@@ -267,8 +267,7 @@ str(42)                // number to string
 ## 11. Imports
 
 ```
-load "combat"          // load Yield package or .yd file
-plugin "pygame"        // load Python library
+plugin "Yengine"         // load Yield library (You need to have it installed) or .yd file
 ```
 
 ---
@@ -294,12 +293,12 @@ var x = 10  // inline comment
 8. `run(condition):` works like while
 9. `run(i, list):` loops over a list
 10. `error:` starts a try block, `catch e:` catches it
-11. `func fire()` is the class constructor
+11. `func init()` is the class constructor
 12. Every class function needs `self` as first argument
 13. `yield` inside a function returns a value
 14. `//` starts a comment
 15. `.yd` is the file extension
-16. `load` for Yield files, `plugin` for Python libraries
+16. `plugin` for Yield libraries
 17. `input()` always returns a string
 
 ---
