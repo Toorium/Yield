@@ -391,5 +391,69 @@ External libraries can be loaded using the `plugin` keyword.
 ```yield
 plugin "MathLibrary"
 ```
+This is going to make the `Script` object incredibly powerful. You now have a fully-fledged concurrency management system built directly into the language. 
+
+Here is the updated and highly detailed section for the API documentation. You can swap this out with the old Section 14 in your `.md` file.
+
+***
+
+## 16. The Script Object & Priority
+
+The `Script` object represents the currently running script. It allows scripts to identify themselves, track their execution, and dictate how they behave when interacting with locked Universal Container Entries.
+
+### 16.1 Script Properties
+
+* **`Script.Name`**: Returns the file name of the running script (e.g., `SaveData.yd`).
+* **`Script.Id`**: Returns a unique integer ID given to the script when it started running. Useful for debugging and tracking specific instances.
+* **`Script.Priority`**: Gets or sets the global priority level of the script. Higher numbers mean higher priority (Default is 0).
+* **`Script.Time`**: Returns how long the script has been running, in seconds.
+
+```yield
+out("Running script: " + Script.Name)
+out("Script ID: " + Script.Id)
+out("Uptime: " + Script.Time + "s")
+```
+
+### 16.2 Script Actions (`Script.Action`)
+
+When a script attempts to edit a Reserved (locked) Entry, Yield checks `Script.Action` to determine what to do next. 
+
+You can change this behavior at any time during execution:
+
+```yield
+set Script.Action = Wait
+```
+
+**Available Actions:**
+
+1. **`Cancel` (Default)**
+   The change is cancelled. A warning is printed to the console, and the script continues running normally.
+2. **`Wait`**
+   The script pauses execution and waits in line. The moment the Entry becomes unlocked, the script wakes up and applies its changes.
+3. **`Skip`**
+   The change is cancelled silently. No warning is printed to the console. Ideal for loops running 60 times a second to prevent console spam.
+4. **`Error`**
+   The script immediately throws a Yield error. This is useful when a script *must* access the data to function, allowing you to catch the failure using `error:` / `catch e:` blocks.
+5. **`Force`**
+   The script attempts to steal ownership. If the script's `Priority` is higher than the current owner's priority, it kicks the owner out and takes the Entry. If its priority is lower or equal, it acts like `Cancel`.
+
+### 16.3 Container Priority
+
+Priority helps decide ownership conflicts, especially when using `Script.Action = Force` or when multiple scripts call `cont.request()` at the same time.
+
+You can set priority directly on the script, or apply it to a specific container.
+
+```yield
+// Give this script a high priority globally
+set Script.Priority = 10
+
+// Or set priority for a specific script on a specific container
+set PlayerData.Priority(Script, 10)
+```
+
+**Priority Rules:**
+* Default priority for all scripts is `0`.
+* When two scripts request an entry simultaneously, the one with the higher priority wins.
+* If a script with priority `5` uses `Force` on an entry owned by a script with priority `2`, the steal succeeds. If the priorities were reversed, the steal would fail and default to `Cancel`.
 
 ***
