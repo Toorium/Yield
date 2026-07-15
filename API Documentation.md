@@ -29,7 +29,7 @@ Constants are automatically uppercased. `const max = 100` becomes `MAX = 100`.
 ### `set` — Change a variable
 ```
 var x = 10
-set x 20
+set x = 20
 ```
 
 ---
