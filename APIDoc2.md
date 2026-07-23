@@ -1,22 +1,33 @@
-# Language Specification API Documentation
+# Bject Language Specification
 
 ## Overview
 
-This language is a strict prototype-based OOP scripting language designed for game and application development.
+Bject is a strict prototype-based OOP scripting language designed for game development, applications, and interactive systems.
 
-The main philosophy:
+The core philosophy:
 
-- Objects define behavior and type.
-- Configurations define variations.
+- Objects define types and behavior.
+- Configurations define variations of objects.
 - Objects have fixed structures.
 - Missing properties cause errors.
 - `nil` is allowed, but missing values are not.
-- `{}` is reserved for data.
-- `[]` is reserved for code blocks.
+- Composition is preferred through nested objects.
+- Tables and arrays have separate structures.
+- Syntax prioritizes readability and consistency.
+
+The name Bject represents the idea that the "B" can represent different concepts:
+
+- Object
+- Project
+- Subject
+- Blueprint
+- Build
 
 ---
 
 # Comments
+
+Comments use:
 
 ```
 // This is a comment
@@ -26,12 +37,14 @@ The main philosophy:
 
 # Values
 
-## Booleans
+## Boolean
 
 ```text
 true
 false
 ```
+
+---
 
 ## Nil
 
@@ -39,13 +52,39 @@ false
 nil
 ```
 
-`nil` represents an intentional empty value.
+`nil` is an intentional empty value.
 
-A missing variable/property is different and causes an error.
+Example:
+
+```text
+weapon = nil
+```
+
+A property containing `nil` exists.
+
+A missing property does not exist and causes an error.
 
 ---
 
 # Operators
+
+## Arithmetic
+
+```text
++
+-
+*
+/
+%
+```
+
+Example:
+
+```text
+damage = strength * 2
+```
+
+---
 
 ## Comparison
 
@@ -58,6 +97,16 @@ A missing variable/property is different and causes an error.
 >=
 ```
 
+Example:
+
+```text
+[if health <= 0:
+
+]
+```
+
+---
+
 ## Logic
 
 ```text
@@ -66,15 +115,15 @@ or
 not
 ```
 
-## Arithmetic
+Example:
 
 ```text
-+
--
-*
-/
-%
+[if alive == true and health > 0:
+
+]
 ```
+
+---
 
 ## Assignment
 
@@ -86,7 +135,15 @@ not
 /=
 ```
 
-## Constants
+Example:
+
+```text
+health -= 10
+```
+
+---
+
+# Constants
 
 Constants are created using:
 
@@ -100,13 +157,13 @@ Example:
 GRAVITY -=- 9.8
 ```
 
-A constant cannot be changed afterward.
+A constant cannot be modified after creation.
 
 ---
 
 # Variables
 
-Variables require declaration before use.
+Variables do not require a declaration keyword.
 
 Example:
 
@@ -115,28 +172,17 @@ health = 100
 name = "Player"
 ```
 
-Inside functions:
+Rules:
 
-- New variables are local.
-- Existing declared variables can be modified.
-
-Example:
-
-```text
-health = 100
-
-[function Damage():
-
-    health -= 10
-
-]
-```
+- A variable must exist before being modified.
+- Variables created inside functions are local.
+- Existing variables can be modified.
 
 ---
 
-# Code Blocks
+# Blocks
 
-All control-flow and function structures use:
+All code structures use:
 
 ```text
 [keyword:
@@ -144,7 +190,12 @@ All control-flow and function structures use:
 ]
 ```
 
-This is the universal block syntax.
+This applies to:
+
+- if statements
+- loops
+- functions
+- try/catch
 
 ---
 
@@ -168,10 +219,12 @@ else:
 ]
 ```
 
-Expression form:
+---
+
+## Expression If
 
 ```text
-grade = [if score > 50: "Pass" else: "Fail"]
+result = [if health > 50: "Alive" else: "Dead"]
 ```
 
 ---
@@ -188,7 +241,9 @@ grade = [if score > 50: "Pass" else: "Fail"]
 ]
 ```
 
-## Counting Loop
+---
+
+## Counting For
 
 ```text
 [for i(0, 10):
@@ -198,12 +253,14 @@ grade = [if score > 50: "Pass" else: "Fail"]
 ]
 ```
 
-## Iteration Loop
+---
+
+## Iteration For
 
 ```text
-[for table, item:
+[for enemies, enemy:
 
-    print(item)
+    enemy.Attack()
 
 ]
 ```
@@ -214,31 +271,47 @@ grade = [if score > 50: "Pass" else: "Fail"]
 
 `{}` is used for data.
 
-## Arrays
+Arrays and key-value tables are different structures.
+
+They cannot be mixed.
+
+---
+
+# Arrays
 
 Example:
 
 ```text
-scores = {10, 20, 30}
+numbers = {10, 20, 30}
 ```
 
 Access:
 
 ```text
-scores{0}
+numbers{0}
+```
+
+Methods:
+
+```text
+numbers.add(40)
+
+numbers.remove(0)
+
+numbers.clear()
 ```
 
 ---
 
-## Key-Value Tables
+# Key-Value Tables
 
 Example:
 
 ```text
-player = {
+PlayerData = {
 
     health = 100
-    name = "Rin"
+    speed = 16
 
 }
 ```
@@ -246,12 +319,10 @@ player = {
 Access:
 
 ```text
-player{health}
+PlayerData{health}
 ```
 
 ---
-
-Arrays and key-value tables cannot be mixed.
 
 Invalid:
 
@@ -259,8 +330,7 @@ Invalid:
 data = {
 
     10,
-    20,
-    name = "Rin"
+    name = "Player"
 
 }
 ```
@@ -269,7 +339,7 @@ data = {
 
 # Functions
 
-## Creating Functions
+Create:
 
 ```text
 [function Add(a, b):
@@ -279,13 +349,11 @@ data = {
 ]
 ```
 
-## Calling Functions
+Call:
 
 ```text
-Add(5, 10)
+Add(10, 20)
 ```
-
-Parentheses are required for function calls.
 
 ---
 
@@ -296,7 +364,7 @@ Example:
 ```text
 [function GetStats():
 
-    return 100, 20
+    return 100, 16
 
 ]
 ```
@@ -311,7 +379,7 @@ health, speed = GetStats()
 
 # Imports
 
-Import external files:
+Import files:
 
 ```text
 import "Enemy"
@@ -335,27 +403,25 @@ catch e:
 ]
 ```
 
-The variable name after `catch` is customizable.
+The catch variable can have any name.
 
-Example:
-
-```text
-catch error:
-```
-
-and:
+Examples:
 
 ```text
 catch e:
 ```
 
-are both valid.
+or:
+
+```text
+catch error:
+```
 
 ---
 
 # Type System
 
-Get the type of a value:
+Get type:
 
 ```text
 type(value)
@@ -371,13 +437,13 @@ print(type(player))
 
 # Object System
 
-Objects are the main OOP feature.
+Objects are the main feature of Bject.
 
 Objects define:
 
-- Behavior
-- Functions
 - Structure
+- Behavior
+- Methods
 
 Configurations define:
 
@@ -391,14 +457,6 @@ Configurations define:
 Example:
 
 ```text
-EnemyConfig = {
-
-    health = 100
-    speed = 10
-
-}
-
-
 Enemy = object.new(config, {
 
     subject.health = config.health
@@ -407,22 +465,28 @@ Enemy = object.new(config, {
 })
 ```
 
-`subject` refers to the current object instance.
+`subject` represents the current object instance.
 
 ---
 
-# Creating Object Instances
+# Object Creation
 
-Example:
+Create an instance:
 
 ```text
 enemy = Enemy.new(EnemyConfig)
 ```
 
-Different configurations create different variations:
+---
+
+# Configurations
+
+Configurations create variations of objects.
+
+Example:
 
 ```text
-FastEnemyConfig = {
+FastZombieConfig = {
 
     health = 80
     speed = 25
@@ -430,16 +494,20 @@ FastEnemyConfig = {
 }
 
 
-fastEnemy = Enemy.new(FastEnemyConfig)
+fastZombie = Zombie.new(FastZombieConfig)
 ```
+
+The object remains the same type.
+
+Only the data changes.
 
 ---
 
 # Object Rules
 
-Objects have a fixed structure.
+Objects have fixed structures.
 
-Allowed:
+Valid:
 
 ```text
 subject.weapon = nil
@@ -447,7 +515,7 @@ subject.weapon = nil
 
 because the property exists.
 
-Not allowed:
+Invalid:
 
 ```text
 player.weapon = "Sword"
@@ -475,11 +543,21 @@ Player = object.new(config, {
 })
 ```
 
+Structure:
+
+```
+Player
+ |
+ +-- Health
+ |
+ +-- Inventory
+```
+
 ---
 
 # Object Methods
 
-Methods are declared outside object creation.
+Methods are created outside object definitions.
 
 Example:
 
@@ -505,169 +583,163 @@ enemy.Attack(player)
 print(value)
 ```
 
-Prints output.
+Print output.
 
 ```text
 warn(value)
 ```
 
-Creates a warning.
+Display warning.
 
 ```text
 error(value)
 ```
 
-Throws an error.
+Throw an error.
 
 ---
 
-## Conversion
+# Conversion
 
 ```text
 number(value)
 ```
 
-Converts to number.
+Convert to number.
 
 ```text
 string(value)
 ```
 
-Converts to string.
+Convert to string.
 
 ```text
 boolean(value)
 ```
 
-Converts to boolean.
+Convert to boolean.
 
 ---
 
-## Time
+# Time
 
 ```text
 wait(seconds)
 ```
 
-Waits for a duration.
+Pause execution.
 
 ```text
 time()
 ```
 
-Returns current runtime.
+Get runtime.
 
 ---
 
-## Random
+# Random
 
 ```text
 random(min, max)
 ```
 
-Creates a random value.
-
-Example:
-
-```text
-damage = random(10, 20)
-```
+Generate random value.
 
 ---
 
-# Array Methods
+# Array API
 
 ```text
 array.length
 ```
 
-Returns amount of elements.
+Get amount of elements.
 
 ```text
 array.add(value)
 ```
 
-Adds an element.
+Add element.
 
 ```text
 array.remove(index)
 ```
 
-Removes an element.
+Remove element.
 
 ```text
 array.clear()
 ```
 
-Clears the array.
+Clear array.
 
 ```text
 array.contains(value)
 ```
 
-Checks if a value exists.
+Check if value exists.
 
 ```text
 array.find(value)
 ```
 
-Finds an element.
+Find index.
 
 ```text
 array.copy()
 ```
 
-Creates a copy.
+Copy array.
 
 ---
 
-# Table Methods
+# Table API
 
 ```text
 table.keys()
 ```
 
-Returns keys.
+Get keys.
 
 ```text
 table.values()
 ```
 
-Returns values.
+Get values.
 
 ```text
 table.has(key)
 ```
 
-Checks if a key exists.
+Check key existence.
 
 ```text
 table.remove(key)
 ```
 
-Removes a key.
+Remove key.
 
 ---
 
-# Object Utilities
+# Object API
 
 ```text
 object.clone()
 ```
 
-Creates a copy.
+Create copy.
 
 ```text
 object.destroy()
 ```
 
-Destroys an object.
+Destroy object.
 
 ```text
 object.type()
 ```
 
-Returns object type.
+Get object type.
 
 ---
 
@@ -757,21 +829,20 @@ restart()
 
 ---
 
-# Language Design Philosophy
+# Bject Design Philosophy
 
-This language prioritizes:
-
-- Strict behavior
-- Predictable code
-- Data-driven design
-- Game development workflows
-- Readable syntax
-- Strong object structures
-- Composition over inheritance
-
-The core idea:
+Bject is built around one main idea:
 
 ```
-Objects define what something does.
+Objects define what something is.
 Configurations define what variation it is.
 ```
+
+The language focuses on:
+
+- strict and predictable code
+- game-oriented architecture
+- readable syntax
+- object composition
+- data-driven systems
+- reliable large-scale projects
